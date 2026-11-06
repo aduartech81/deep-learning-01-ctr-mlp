@@ -1,0 +1,21 @@
+title: "Predicción de clics con MLP: scikit-learn vs PySpark"
+author: Andrés Duarte Chaves
+copyright: "2026"
+only_build_toc_files: true
+exclude_patterns: [data/*, results/*, results_smoke/*, nb_src/*, _build/*]
+
+execute:
+  # Los notebooks se ejecutan antes con scripts/run_all.sh (son corridas largas);
+  # el libro se construye con las salidas ya guardadas.
+  execute_notebooks: "off"
+
+parse:
+  myst_enable_extensions: [dollarmath, amsmath, colon_fence]
+
+sphinx:
+  config:
+    language: es
+    html_show_copyright: false
+
+html:
+  use_repository_button: false

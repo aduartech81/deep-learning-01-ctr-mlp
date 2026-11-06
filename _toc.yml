@@ -1,0 +1,21 @@
+format: jb-book
+root: intro
+parts:
+  - caption: Datos
+    chapters:
+      - file: notebooks/01_ficha_datos
+      - file: notebooks/02_eda
+      - file: notebooks/03_preprocesamiento
+  - caption: Modelado
+    chapters:
+      - file: notebooks/04_sklearn
+      - file: notebooks/05_pyspark
+  - caption: Resultados
+    chapters:
+      - file: notebooks/06_evaluacion
+      - file: notebooks/07_benchmarking
+      - file: notebooks/08_interpretabilidad
+      - file: notebooks/09_comparacion_reflexion
+  - caption: Anexos
+    chapters:
+      - file: notebooks/10_reproducibilidad
