@@ -1,0 +1,7 @@
+data/
+results/
+results_smoke/
+_build/
+logs/
+__pycache__/
+.ipynb_checkpoints/

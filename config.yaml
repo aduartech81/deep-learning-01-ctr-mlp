@@ -1,0 +1,128 @@
+# Configuración central del Proyecto Integrador 2.12 (CTR con MLP: scikit-learn vs PySpark)
+# Se elige el perfil con la variable de entorno CTR_PROFILE (por defecto: full).
+#   full  -> ejecución real con Avazu en el Mac
+#   smoke -> prueba de humo con datos sintéticos (solo para verificar que el código corre)
+
+common:
+  seed_base: 42
+  paths:
+    raw_csv: data/raw/train.gz          # archivo descargado de Kaggle (puede ser .gz o .csv)
+    parquet_dir: data/parquet           # Parquet particionado por día (day=21 ... day=30)
+    results_dir: results
+    figures_dir: results/figures
+  split:                                # división temporal (anti-fuga)
+    train_days: [21, 22, 23, 24, 25, 26, 27, 28]
+    valid_day: 29
+    test_day: 30
+  features:
+    high_card: [site_id, site_domain, app_id, app_domain, device_id, device_ip, device_model,
+                C14, C17, C19, C20, C21]
+    low_card:  [C1, banner_pos, site_category, app_category, device_type, device_conn_type,
+                C15, C16, C18, hour_of_day, dow, franja]
+    crosses:                            # cruces de variables (ablación)
+      - [site_id, device_type]
+      - [app_id, device_type]
+      - [banner_pos, device_conn_type]
+  mlp_search_space:                     # espacio de búsqueda pedido en el enunciado
+    hidden_layer_sizes: ["50", "100", "100-50", "256-128"]
+    alpha: [1.0e-5, 1.0e-1]             # escala logarítmica
+    learning_rate_init: [1.0e-4, 1.0e-2]
+    batch_size: [256, 512, 1024, 2048]
+  spark_grid:
+    hidden: [[10], [50], [100], [128, 64]]
+    stepSize: [0.1, 0.01]
+    maxIter: [100, 200]
+    solver: [l-bfgs, gd]
+
+profiles:
+  full:
+    rare_min_count: 20                  # categorías con < 20 apariciones en entrenamiento -> __RARE__
+    hash_dims: [4096, 16384, 65536]     # 2^12, 2^14, 2^16
+    hash_dim_main: 16384                # 2^14 = codificación principal
+    sk_sizes: [100000, 1000000, 10000000]
+    sk_seed_sizes: [100000, 1000000]    # tamaños con 5 semillas; el resto con 1 semilla
+    n_seeds: 5
+    valid_max_rows: 1000000             # submuestra del día 29 para tuning y parada temprana
+    test_max_rows: null                 # null = día 30 completo
+    optuna_trials: 30
+    optuna_train_size: 1000000
+    max_epochs: 30
+    patience: 3
+    ablation_size: 1000000
+    ablation_seeds: 3
+    spark:
+      driver_memory: 12g                # ajústelo a ~60-70 % de la RAM del Mac
+      shuffle_partitions: 64
+      sizes_freq: [100000, 1000000, 10000000, null]   # null = entrenamiento completo
+      sizes_hash: [100000, 1000000]     # el MLP de Spark densifica: hashing solo en muestras
+      hash_dim: 4096
+      hash_seeds: 1                     # el MLP con hashing en Spark es muy costoso: una semilla
+      grid_size: 1000000                # grid con frecuencia
+      grid_size_hash: 100000            # grid con hashing (mucho más caro)
+      grid_hidden_hash: [[50], [100]]
+      grid_full_encodings: [freq]       # grid completo (32 combinaciones) solo con frecuencia
+      gbt_max_size: 10000000
+      max_fit_minutes: 90               # si la extrapolación supera esto, la corrida se omite y se registra
+    bench:
+      crossover_sizes: [100000, 300000, 1000000, 3000000, 10000000, null]
+      strong_size: 1000000
+      cores: [1, 2, 4, 8]
+      weak_base: 500000
+      reps: 3
+      cloud_price_usd_per_hour: null    # p. ej., precio por hora de la instancia elegida (verificar)
+    explain:
+      n_cases: 10                       # 10 FP + 10 FN de mayor confianza errónea
+      lime_seeds: 10
+      lime_num_samples: [1000, 5000]
+      kernel_width_factors: [0.5, 1.0, 2.0]
+      top_k: 5
+      background: 500
+      shap_cases: 20
+      perm_rows: 50000
+    bootstrap: 500
+
+  smoke:
+    rare_min_count: 5
+    hash_dims: [1024, 4096]
+    hash_dim_main: 4096
+    sk_sizes: [20000, 60000]
+    sk_seed_sizes: [20000]
+    n_seeds: 2
+    valid_max_rows: 20000
+    test_max_rows: 30000
+    optuna_trials: 3
+    optuna_train_size: 20000
+    max_epochs: 4
+    patience: 2
+    ablation_size: 20000
+    ablation_seeds: 2
+    spark:
+      driver_memory: 3g
+      shuffle_partitions: 4
+      sizes_freq: [20000, null]
+      sizes_hash: [5000]
+      hash_dim: 256
+      hash_seeds: 1
+      grid_size: 20000
+      grid_size_hash: 5000
+      grid_hidden_hash: [[10]]
+      grid_full_encodings: []
+      gbt_max_size: 60000
+      max_fit_minutes: 5
+    bench:
+      crossover_sizes: [10000, 40000]
+      strong_size: 20000
+      cores: [1, 2]
+      weak_base: 10000
+      reps: 1
+      cloud_price_usd_per_hour: 0.5
+    explain:
+      n_cases: 2
+      lime_seeds: 3
+      lime_num_samples: [300]
+      kernel_width_factors: [1.0, 2.0]
+      top_k: 3
+      background: 50
+      shap_cases: 3
+      perm_rows: 3000
+    bootstrap: 30
