@@ -101,6 +101,16 @@ def backup(include_parquet=False):
         os.makedirs(f"{DRIVE}/{sub}", exist_ok=True)
         subprocess.run(f'cp -r "{sub}/." "{DRIVE}/{sub}/"', shell=True, check=True)
 
+import threading
+def _respaldo_periodico():          # respaldo cada 10 min: si la sesión se corta, no se pierde el capítulo en curso
+    while True:
+        time.sleep(600)
+        try:
+            backup()
+        except Exception:
+            pass
+threading.Thread(target=_respaldo_periodico, daemon=True).start()
+
 for ch in CHAPTERS:
     if os.path.exists(f"{DRIVE}/done/{ch}"):
         print(f"{ch}: ya terminado"); continue

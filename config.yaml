@@ -165,7 +165,7 @@ profiles:
       gbt_max_size: 10000000
       max_fit_minutes: 60
     bench:
-      crossover_sizes: [100000, 300000, 1000000, 3000000, 10000000, null]
+      crossover_sizes: [100000, 300000, 1000000, 3000000, 10000000]   # sin el completo: no cabe en una sesión
       strong_size: 1000000
       cores: [1, 2, 4, 8]
       weak_base: 500000
