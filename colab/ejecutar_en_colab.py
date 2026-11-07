@@ -49,12 +49,19 @@ if not os.path.exists(REPO):
 else:
     subprocess.run(["git", "-C", REPO, "pull", "--ff-only"], check=False)
 os.chdir(REPO)
-for sub in ["results", "data/parquet", "notebooks"]:
+for sub in ["results", "data/parquet"]:
     src = f"{DRIVE}/{sub}"
     if os.path.exists(src):
         os.makedirs(sub, exist_ok=True)
         subprocess.run(f'cp -r "{src}/." "{sub}/"', shell=True, check=True)
         print("restaurado desde Drive:", sub)
+# notebooks: solo se restauran los capítulos YA terminados; los demás se toman del repositorio
+# (así una corrección subida a GitHub no queda tapada por una copia vieja guardada en Drive)
+import glob
+for ch in (os.listdir(f"{DRIVE}/done") if os.path.exists(f"{DRIVE}/done") else []):
+    for f in glob.glob(f"{DRIVE}/notebooks/{ch}_*.ipynb"):
+        subprocess.run(["cp", f, "notebooks/"], check=True)
+        print("restaurado desde Drive:", os.path.basename(f))
 print(sorted(os.listdir(f"{DRIVE}/done")) or "ningún capítulo terminado todavía")
 
 # %%
