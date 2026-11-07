@@ -25,8 +25,35 @@ computacional, y analiza la interpretabilidad con LIME contrastada con SHAP.
 > McNemar), compute benchmarking (crossover point, strong/weak scaling, Amdahl) and a critical
 > assessment of LIME against SHAP. Fully reproducible Jupyter Book.
 
-**Estado:** código completo y verificado de punta a punta con datos sintéticos; los resultados con
-los datos reales de Avazu se publicarán al terminar la ejecución completa.
+**Estado:** ejecutado completo con los datos reales de Avazu (Google Colab Pro, 8 núcleos, 51 GB;
+perfil `colab`). Los notebooks publicados contienen las salidas reales.
+
+## Resultados principales (prueba = día 30, 4,2 M de impresiones)
+
+| Modelo (entorno, codificación, filas de entrenamiento) | ROC AUC | Log loss | Entrenamiento |
+|---|---|---|---|
+| **MLP scikit-learn, hashing, 10 M** | **0,742** | **0,400** | 1 337 s |
+| HistGradientBoosting, target encoding, 10 M | 0,739 | 0,401 | 165 s |
+| SGD logístico, hashing, 10 M | 0,732 | 0,406 | 356 s |
+| MLP scikit-learn, frecuencia, 10 M | 0,672 | 0,440 | 184 s |
+| MLP PySpark, hashing, 100 k | 0,717 | 0,412 | 304 s |
+| MLP scikit-learn, hashing, 100 k | 0,717 | 0,411 | 37 s |
+| MLP PySpark, frecuencia, 32,4 M (todo el entrenamiento) | 0,649 | 0,441 | 1 065 s |
+
+- **P1 (rendimiento):** en una sola máquina no hubo punto de cruce: scikit-learn fue más rápido en
+  todos los volúmenes medidos (hasta 10 M de filas). Spark sí escala con los núcleos (fracción
+  secuencial de Amdahl ≈ 0,21; aceleración máxima teórica ≈ 4,9×); el MLP de scikit-learn no.
+- **P2 (codificación):** el hashing supera a la frecuencia por +0,070 de AUC, a cambio del doble de
+  memoria en la matriz de entrada.
+- **P3 (¿vale la pena el MLP?):** el MLP con hashing le gana a HGB con target encoding por
+  +0,003 de AUC (significativo con DeLong + Holm, pero pequeño) y tarda ~8 veces más. Con las
+  mismas filas, scikit-learn y Spark dan la misma AUC (Δ = −0,0002): lo que decide la calidad es la
+  codificación y el volumen, no el motor.
+- **P4 (LIME):** fidelidad local baja (R² medio 0,12) y estabilidad moderada entre semillas
+  (Jaccard top-5 0,78); acuerdo parcial con SHAP (Spearman 0,70). LIME no basta por sí solo como
+  evidencia.
+
+Detalle, intervalos de confianza y discusión en el capítulo 9 del libro.
 
 **Jupyter Book publicado:** https://aduartech81.github.io/deep-learning-01-ctr-mlp/
 
@@ -139,9 +166,9 @@ GitHub Actions vuelve a publicar el libro en GitHub Pages en unos minutos.
 
 - [ ] Ficha de datos (cap. 1): pegar la cláusula de uso de datos de las *Rules* de Kaggle.
 - [ ] Cap. 9: revisar y completar el borrador de respuestas P1–P4 y la reflexión con sus palabras.
-- [ ] Revisar que no queden salidas del perfil `smoke` (los notebooks muestran el perfil arriba).
+- [x] Revisar que no queden salidas del perfil `smoke` (verificado: todos con perfil `colab`).
 - [ ] Capturas de la Spark UI.
-- [ ] `bash scripts/subir_resultados.sh` y comprobar que el libro publicado muestra los resultados.
+- [x] Subir notebooks ejecutados y resultados; el libro publicado muestra los resultados.
 - [ ] Enviar al profesor el enlace del libro y del repositorio (o lo que pida la plataforma).
 
 ## Decisiones metodológicas clave
