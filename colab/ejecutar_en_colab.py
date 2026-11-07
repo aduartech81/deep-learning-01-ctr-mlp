@@ -8,8 +8,9 @@
 # **Antes de empezar (una sola vez)**
 # 1. *Entorno de ejecución → Cambiar tipo de entorno de ejecución*: **CPU** y activar **RAM alta**
 #    (High-RAM). No use GPU: los modelos de este proyecto solo usan CPU y la GPU gasta unidades.
-# 2. Panel de la llave (**Secretos**, a la izquierda): cree `KAGGLE_USERNAME` y `KAGGLE_KEY` (los
-#    valores están en su `kaggle.json`) y active el acceso de este cuaderno. Opcional:
+# 2. Panel de la llave (**Secretos**, a la izquierda): cree `KAGGLE_API_TOKEN` con el token de
+#    kaggle.com/settings → API → *Generate New Token* (o, con credenciales antiguas, `KAGGLE_USERNAME`
+#    y `KAGGLE_KEY` del archivo `kaggle.json`) y active el acceso de este cuaderno. Opcional:
 #    `GITHUB_TOKEN` (token *fine-grained* con permiso *Contents: read and write* solo para este
 #    repositorio) para subir los resultados al final.
 # 3. Acepte las reglas de la competencia en kaggle.com/c/avazu-ctr-prediction → Rules.
@@ -67,8 +68,18 @@ print(subprocess.run("java -version", shell=True, capture_output=True, text=True
 # 5. Datos de Avazu desde Kaggle (solo si aún no están convertidos a Parquet)
 from google.colab import userdata
 if not os.path.exists("data/parquet") or not any(n.startswith("day=") for n in os.listdir("data/parquet")):
-    os.environ["KAGGLE_USERNAME"] = userdata.get("KAGGLE_USERNAME")
-    os.environ["KAGGLE_KEY"] = userdata.get("KAGGLE_KEY")
+    def _secret(name):
+        try:
+            return userdata.get(name)
+        except Exception:
+            return None
+    if _secret("KAGGLE_API_TOKEN"):          # token nuevo de Kaggle ("Generate New Token")
+        os.environ["KAGGLE_API_TOKEN"] = _secret("KAGGLE_API_TOKEN")
+    elif _secret("KAGGLE_USERNAME") and _secret("KAGGLE_KEY"):   # credenciales antiguas (kaggle.json)
+        os.environ["KAGGLE_USERNAME"] = _secret("KAGGLE_USERNAME")
+        os.environ["KAGGLE_KEY"] = _secret("KAGGLE_KEY")
+    else:
+        raise SystemExit("Falta el secreto KAGGLE_API_TOKEN (o KAGGLE_USERNAME y KAGGLE_KEY) con acceso activado.")
     os.makedirs("data/raw", exist_ok=True)
     subprocess.run("kaggle competitions download -c avazu-ctr-prediction -f train.gz -p data/raw", shell=True, check=True)
     if os.path.exists("data/raw/train.gz.zip"):
