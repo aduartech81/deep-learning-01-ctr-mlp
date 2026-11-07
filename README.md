@@ -88,6 +88,14 @@ environment.yml          # entorno con versiones fijadas (incluye Java 17 para S
    - `bench.cores`: hasta el número de núcleos de su equipo.
    - `bench.cloud_price_usd_per_hour`: precio por hora de una instancia de referencia (opcional).
 
+## Ejecución en Google Colab (alternativa recomendada si el equipo tiene poca RAM)
+
+Abra [colab/ejecutar_en_colab.ipynb](https://colab.research.google.com/github/aduartech81/deep-learning-01-ctr-mlp/blob/main/colab/ejecutar_en_colab.ipynb)
+en Colab, con entorno **CPU + RAM alta**. El cuaderno detecta la RAM y elige el perfil (`colab` si hay
+24 GB o más, si no `mac8`), descarga Avazu desde Kaggle con los secretos de Colab, ejecuta los
+capítulos y respalda todo en Google Drive después de cada uno; si la sesión se corta, basta volver a
+ejecutarlo para continuar.
+
 ## Ejecución
 
 Prueba rápida de que todo corre (datos sintéticos, ~30 min, resultados SIN valor empírico):

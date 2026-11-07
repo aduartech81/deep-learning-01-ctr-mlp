@@ -27,6 +27,8 @@ for nb in notebooks/[0-9][0-9]_*.ipynb; do
     "$nb" 2>&1 | tee "logs/${name%.ipynb}.log"
 done
 
-echo "=== construyendo el Jupyter Book"
-jupyter-book build . 2>&1 | tail -5
-echo "Listo: abra _build/html/index.html"
+if [[ "${SKIP_BOOK:-0}" != "1" ]]; then
+  echo "=== construyendo el Jupyter Book"
+  jupyter-book build . 2>&1 | tail -5
+  echo "Listo: abra _build/html/index.html"
+fi

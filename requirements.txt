@@ -1,0 +1,23 @@
+# Mismas versiones que environment.yml (para pip, p. ej. en Colab). Requiere Java 17 aparte.
+numpy==2.5.3
+pandas==2.3.3
+polars==2.1.0
+duckdb==2.0.0
+pyarrow==26.0.1
+scikit-learn==1.9.1
+scipy==1.18.1
+pyspark==4.3.0
+optuna==5.0.0
+lime==0.2.0.1
+shap==0.54.1
+matplotlib==3.11.2
+seaborn==0.13.2
+statsmodels==0.15.0
+threadpoolctl==3.7.0
+psutil==7.2.2
+pyyaml
+ipykernel
+nbconvert==7.17.2
+jupyter-book==1.0.4.post1
+jupytext==1.19.6
+kaggle

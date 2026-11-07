@@ -2,6 +2,7 @@
 # Se elige el perfil con la variable de entorno CTR_PROFILE (por defecto: full).
 #   full  -> ejecución real con Avazu en un equipo de 16 GB o más
 #   mac8  -> ejecución real con Avazu en un Mac de 8 GB de RAM (tamaños y repeticiones reducidos)
+#   colab -> ejecución real en Google Colab Pro con High-RAM (ver colab/ejecutar_en_colab.ipynb)
 #   smoke -> prueba de humo con datos sintéticos (solo para verificar que el código corre)
 
 common:
@@ -128,6 +129,55 @@ profiles:
       kernel_width_factors: [0.5, 1.0, 2.0]
       top_k: 5
       background: 300
+      shap_cases: 20
+      perm_rows: 50000
+    bootstrap: 500
+
+  colab:
+    # Colab Pro con "High-RAM" (>= 24 GB). La memoria de Spark se fija al arrancar con la variable
+    # CTR_SPARK_DRIVER_MEMORY (55 % de la RAM detectada). Incluye 10 M de filas y el entrenamiento completo.
+    ingest_memory: 10GB
+    rare_min_count: 20
+    hash_dims: [4096, 16384, 65536]
+    hash_dim_main: 16384
+    sk_sizes: [100000, 1000000, 10000000]
+    sk_seed_sizes: [100000, 1000000]
+    n_seeds: 5
+    valid_max_rows: 1000000
+    test_max_rows: null
+    optuna_trials: 25
+    optuna_train_size: 300000
+    max_epochs: 20
+    patience: 3
+    ablation_size: 300000
+    ablation_seeds: 3
+    spark:
+      driver_memory: 12g
+      shuffle_partitions: 64
+      sizes_freq: [100000, 1000000, 10000000, null]
+      sizes_hash: [100000]
+      hash_dim: 4096
+      hash_seeds: 1
+      grid_size: 300000
+      grid_size_hash: 50000
+      grid_hidden_hash: [[50], [100]]
+      grid_full_encodings: [freq]
+      gbt_max_size: 10000000
+      max_fit_minutes: 60
+    bench:
+      crossover_sizes: [100000, 300000, 1000000, 3000000, 10000000, null]
+      strong_size: 1000000
+      cores: [1, 2, 4, 8]
+      weak_base: 500000
+      reps: 2
+      cloud_price_usd_per_hour: null
+    explain:
+      n_cases: 10
+      lime_seeds: 10
+      lime_num_samples: [1000, 5000]
+      kernel_width_factors: [0.5, 1.0, 2.0]
+      top_k: 5
+      background: 500
       shap_cases: 20
       perm_rows: 50000
     bootstrap: 500

@@ -61,6 +61,8 @@ def load_config(profile: str | None = None) -> Config:
     if profile not in y["profiles"]:
         raise ValueError(f"Perfil desconocido: {profile}")
     raw = _deep_merge(y["common"], y["profiles"][profile])
+    if os.environ.get("CTR_SPARK_DRIVER_MEMORY"):  # p. ej. en Colab, según la RAM detectada
+        raw["spark"] = dict(raw["spark"], driver_memory=os.environ["CTR_SPARK_DRIVER_MEMORY"])
     if profile == "smoke":  # la prueba de humo nunca toca los datos reales
         raw["paths"] = dict(raw["paths"], raw_csv="data/smoke/train_synthetic.csv.gz",
                             parquet_dir="data/smoke/parquet", results_dir="results_smoke",
