@@ -1,0 +1,8 @@
+{
+  "hidden_layer_sizes": "100",
+  "alpha": 0.04667993294288689,
+  "learning_rate_init": 0.00014659067019501246,
+  "batch_size": 2048,
+  "val_log_loss": 0.3860083222389221,
+  "busqueda_s": 2026.7151061429997
+}

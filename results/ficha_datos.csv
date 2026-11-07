@@ -1,0 +1,13 @@
+Campo,Valor
+Nombre,"Avazu Click-Through Rate Prediction (Kaggle, 2014-2015)"
+Origen,Competencia de Kaggle organizada por Avazu (plataforma de publicidad móvil); archivo train.gz
+Licencia / uso,"Regido por las reglas de la competencia en Kaggle (pestaña Rules), que deben aceptarse antes de descargar. COMPLETAR: copiar aquí la cláusula de uso de datos tal como aparece en Kaggle."
+Período,10 días: 21 al 30 de octubre de 2014 (días presentes: 21–30)
+Filas totales,"40,428,967"
+Entrenamiento / validación / prueba,"32,377,421 / 3,832,608 / 4,218,938"
+Tasa base de clics (global),0.1698
+Tamaño CSV comprimido en disco,1.04 GB
+Tamaño Parquet (zstd) en disco,0.97 GB
+"Tamaño estimado en memoria (Polars, todas las columnas)",5.1 GB
+Variables,"id, click, hour, C1, banner_pos, site_*, app_*, device_*, C14–C21 (anonimizadas)"
+Limitaciones,"Variables C1 y C14–C21 anonimizadas (sin semántica); device_ip/device_id con millones de categorías; el test oficial de Kaggle no trae etiqueta, por eso la prueba es el día 30 del train; solo 10 días: un único corte temporal (no hay estacionalidad semanal completa); datos de 2014: el mercado actual es distinto (validez externa limitada)."
