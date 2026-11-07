@@ -28,6 +28,8 @@ computacional, y analiza la interpretabilidad con LIME contrastada con SHAP.
 **Estado:** código completo y verificado de punta a punta con datos sintéticos; los resultados con
 los datos reales de Avazu se publicarán al terminar la ejecución completa.
 
+**Jupyter Book publicado:** https://aduartech81.github.io/deep-learning-01-ctr-mlp/
+
 ## Estructura
 
 ```
@@ -44,12 +46,19 @@ notebooks/01..10         # capítulos del libro (se ejecutan en orden)
 nb_src/                  # mismos notebooks en formato texto (jupytext), útiles para git diff
 intro.md, _config.yml, _toc.yml   # Jupyter Book
 scripts/run_all.sh       # ejecuta todo y construye el libro
+scripts/subir_resultados.sh  # sube notebooks ejecutados y resultados (con verificaciones)
+.github/workflows/book.yml   # publica el libro en GitHub Pages en cada push
 scripts/make_synthetic.py# datos sintéticos SOLO para la prueba de humo
 environment.yml          # entorno con versiones fijadas (incluye Java 17 para Spark)
 ```
 
 ## Pasos en el Mac (una sola vez)
 
+0. **Clonar el repositorio** (trabaje siempre en esta copia, no en el zip):
+   ```bash
+   cd ~ && git clone https://github.com/aduartech81/deep-learning-01-ctr-mlp.git
+   cd deep-learning-01-ctr-mlp
+   ```
 1. **Instalar Miniforge** (si no tiene conda): https://github.com/conda-forge/miniforge
 2. **Crear el entorno**, en la carpeta del proyecto:
    ```bash
@@ -97,7 +106,23 @@ bash scripts/run_all.sh 04         # solo un capítulo (los demás reutilizan re
 - Durante el capítulo 5 con el entrenamiento completo, abra http://localhost:4040 y guarde capturas
   de *Jobs*, *Stages* y *Storage* en `results/figures/spark_ui_*.png` (evidencia pedida).
 
-El libro queda en `_build/html/index.html`.
+El libro queda en `_build/html/index.html` (vista local).
+
+## Publicar resultados
+
+Cuando todos los capítulos estén ejecutados con el perfil `full`:
+```bash
+bash scripts/subir_resultados.sh
+```
+El script verifica que ningún notebook tenga salidas de la prueba sintética, sube los notebooks
+ejecutados y `results/` (tablas, figuras y json; las predicciones y muestras quedan locales) y
+GitHub Actions vuelve a publicar el libro en GitHub Pages en unos minutos.
+
+| Entregable de la tarea | Dónde queda |
+|---|---|
+| Notebooks `.ipynb` ejecutados | `notebooks/` en este repositorio |
+| Jupyter Book | https://aduartech81.github.io/deep-learning-01-ctr-mlp/ |
+| Resultados (tablas, figuras) | `results/` en este repositorio |
 
 ## Antes de entregar
 
@@ -105,7 +130,8 @@ El libro queda en `_build/html/index.html`.
 - [ ] Cap. 9: revisar y completar el borrador de respuestas P1–P4 y la reflexión con sus palabras.
 - [ ] Revisar que no queden salidas del perfil `smoke` (los notebooks muestran el perfil arriba).
 - [ ] Capturas de la Spark UI.
-- [ ] Subir el repositorio y el libro según indique el profesor.
+- [ ] `bash scripts/subir_resultados.sh` y comprobar que el libro publicado muestra los resultados.
+- [ ] Enviar al profesor el enlace del libro y del repositorio (o lo que pida la plataforma).
 
 ## Decisiones metodológicas clave
 

@@ -1,7 +1,12 @@
+# datos (las reglas de Kaggle no permiten redistribuirlos)
 data/
-results/
+# resultados pesados o intermedios: se quedan en el equipo local
+results/preds/
+results/samples/
+# prueba de humo con datos sintéticos: nunca se sube
 results_smoke/
 _build/
 logs/
 __pycache__/
 .ipynb_checkpoints/
+.DS_Store
