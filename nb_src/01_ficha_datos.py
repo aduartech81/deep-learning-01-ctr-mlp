@@ -37,7 +37,7 @@ raw = cfg.path("raw_csv")
 assert raw.exists(), f"No se encuentra {raw}. Siga el paso 3 del README (descarga desde Kaggle)."
 rec = {}
 with measure(rec, "ingesta"):
-    info = data.csv_to_parquet(raw, cfg.path("parquet_dir"))
+    info = data.csv_to_parquet(raw, cfg.path("parquet_dir"), memory_limit=cfg.get("ingest_memory", "8GB"))
 print(info, {k: round(v, 1) for k, v in rec.items()})
 
 # %% [markdown]

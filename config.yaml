@@ -1,6 +1,7 @@
 # Configuración central del Proyecto Integrador 2.12 (CTR con MLP: scikit-learn vs PySpark)
 # Se elige el perfil con la variable de entorno CTR_PROFILE (por defecto: full).
-#   full  -> ejecución real con Avazu en el Mac
+#   full  -> ejecución real con Avazu en un equipo de 16 GB o más
+#   mac8  -> ejecución real con Avazu en un Mac de 8 GB de RAM (tamaños y repeticiones reducidos)
 #   smoke -> prueba de humo con datos sintéticos (solo para verificar que el código corre)
 
 common:
@@ -36,6 +37,7 @@ common:
 
 profiles:
   full:
+    ingest_memory: 8GB
     rare_min_count: 20                  # categorías con < 20 apariciones en entrenamiento -> __RARE__
     hash_dims: [4096, 16384, 65536]     # 2^12, 2^14, 2^16
     hash_dim_main: 16384                # 2^14 = codificación principal
@@ -81,7 +83,57 @@ profiles:
       perm_rows: 50000
     bootstrap: 500
 
+  mac8:
+    # Mac de 8 GB: sin 10 M de filas ni entrenamiento completo (no caben en memoria). Todo lo
+    # demás conserva el diseño del enunciado. Se reporta como limitación en el capítulo 9.
+    ingest_memory: 3GB
+    rare_min_count: 20
+    hash_dims: [4096, 16384, 65536]
+    hash_dim_main: 16384
+    sk_sizes: [100000, 1000000, 3000000]
+    sk_seed_sizes: [100000, 1000000]
+    n_seeds: 5
+    valid_max_rows: 500000
+    test_max_rows: 1000000
+    optuna_trials: 25
+    optuna_train_size: 300000
+    max_epochs: 20
+    patience: 3
+    ablation_size: 300000
+    ablation_seeds: 3
+    spark:
+      driver_memory: 4g
+      shuffle_partitions: 16
+      sizes_freq: [100000, 1000000, 3000000]
+      sizes_hash: [100000]
+      hash_dim: 4096
+      hash_seeds: 1
+      grid_size: 300000
+      grid_size_hash: 50000
+      grid_hidden_hash: [[50], [100]]
+      grid_full_encodings: [freq]
+      gbt_max_size: 1000000
+      max_fit_minutes: 45
+    bench:
+      crossover_sizes: [100000, 300000, 1000000, 3000000]
+      strong_size: 500000
+      cores: [1, 2, 4, 8]
+      weak_base: 200000
+      reps: 2
+      cloud_price_usd_per_hour: null
+    explain:
+      n_cases: 10
+      lime_seeds: 10
+      lime_num_samples: [1000, 5000]
+      kernel_width_factors: [0.5, 1.0, 2.0]
+      top_k: 5
+      background: 300
+      shap_cases: 20
+      perm_rows: 50000
+    bootstrap: 500
+
   smoke:
+    ingest_memory: 1GB
     rare_min_count: 5
     hash_dims: [1024, 4096]
     hash_dim_main: 4096

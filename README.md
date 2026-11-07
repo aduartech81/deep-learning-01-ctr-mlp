@@ -80,7 +80,9 @@ environment.yml          # entorno con versiones fijadas (incluye Java 17 para S
      # si llega como train.gz.zip:  cd data/raw && unzip train.gz.zip && cd ../..
      ```
      El resultado debe ser `data/raw/train.gz` (~1,1 GB comprimido).
-4. **Ajustar `config.yaml` a su Mac** (perfil `full`):
+4. **Elegir el perfil según la RAM.** Con **8 GB** use el perfil `mac8` (ya ajustado: hasta 3 M de
+   filas, Spark con 4 GB, prueba con 1 M de filas del día 30). Con 16 GB o más, el perfil `full`.
+   Para ajustar el perfil `full`:
    - `spark.driver_memory`: ~60–70 % de la RAM (12g con 16 GB; 20g con 32 GB).
    - Con 8 GB de RAM: quite `10000000` de `sk_sizes` y `null` de `sizes_freq` y `crossover_sizes`.
    - `bench.cores`: hasta el número de núcleos de su equipo.
@@ -92,10 +94,11 @@ Prueba rápida de que todo corre (datos sintéticos, ~30 min, resultados SIN val
 ```bash
 CTR_PROFILE=smoke bash scripts/run_all.sh
 ```
-Ejecución real (larga: deje el Mac conectado y sin suspensión, p. ej. `caffeinate -i bash scripts/run_all.sh`):
+Ejecución real (larga: deje el Mac conectado a la corriente, con las demás aplicaciones cerradas):
 ```bash
-bash scripts/run_all.sh            # todos los capítulos
-bash scripts/run_all.sh 04         # solo un capítulo (los demás reutilizan resultados guardados)
+CTR_PROFILE=mac8 caffeinate -i bash scripts/run_all.sh      # Mac de 8 GB (≈ 6–9 h, ideal de noche)
+CTR_PROFILE=mac8 bash scripts/run_all.sh 04                 # solo un capítulo
+bash scripts/run_all.sh                                     # perfil full (16 GB o más)
 ```
 - Los capítulos 4, 5 y 7 son **reanudables**: si se interrumpen, al volver a correrlos saltan lo que
   ya está en `results/*.jsonl`. Para rehacer algo, borre la línea o el archivo correspondiente.

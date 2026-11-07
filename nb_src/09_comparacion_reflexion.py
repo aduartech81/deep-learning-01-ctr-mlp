@@ -167,6 +167,8 @@ display(Markdown("\n\n".join(out)))
 #   no se pueden interpretar en términos de negocio.
 # - **Sesgo de muestreo:** Avazu es una muestra de 2014 de una sola plataforma; el submuestreo por
 #   hash es uniforme, pero las muestras de 100 mil no representan bien las categorías raras.
+# - **Recursos de cómputo:** con el perfil `mac8` (Mac de 8 GB) los tamaños llegan a 3 M de filas y no
+#   se usa el entrenamiento completo; el punto de cruce de P1 solo puede afirmarse dentro de ese rango.
 # - **Validez del benchmark:** una sola máquina (Spark en modo local), carga de otros procesos,
 #   caché del sistema de archivos y número de repeticiones limitado.
 # - **Diferencias de implementación:** los hashers de scikit-learn y Spark usan semillas distintas
