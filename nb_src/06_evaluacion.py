@@ -71,8 +71,22 @@ cands = {
     "sk SGD freq": pick("sklearn", "sgd", "freq", N_CMP), "spark MLP freq": pick("spark", "mlp", "freq", N_CMP),
     "spark GBT freq": pick("spark", "gbt", "freq", N_CMP), "spark LR freq": pick("spark", "lr", "freq", N_CMP),
 }
-best_sk = r0[r0.framework == "sklearn"].sort_values("roc_auc", ascending=False).iloc[0]
-cands[f"sk mejor ({best_sk.model} {best_sk.encoding} n={best_sk.n:,})"] = best_sk
+# P3 se responde con cada modelo en su MEJOR codificación y al mismo tamaño: MLP y SGD con hashing,
+# HGB con target encoding (HGB no admite la matriz dispersa del hashing).
+sk_ok = r0[r0.framework == "sklearn"]
+both = sorted(set(sk_ok[(sk_ok.model == "mlp") & (sk_ok.encoding == "hash")]["n"]) &
+              set(sk_ok[(sk_ok.model == "hgb") & (sk_ok.encoding == "target")]["n"]))
+N_BEST = max(both) if both else None
+if N_BEST:
+    cands.update({"sk MLP hash": pick("sklearn", "mlp", "hash", N_BEST),
+                  "sk HGB target": pick("sklearn", "hgb", "target", N_BEST),
+                  "sk SGD hash": pick("sklearn", "sgd", "hash", N_BEST)})
+    print(f"Tamaño para comparar mejores configuraciones: {N_BEST:,}")
+sp_h = r0[(r0.framework == "spark") & (r0.encoding == "hash")]
+if len(sp_h):
+    n_sh = int(sp_h["n"].max())
+    cands.update({"spark MLP hash": pick("spark", "mlp", "hash", n_sh), "spark LR hash": pick("spark", "lr", "hash", n_sh),
+                  "sk MLP hash (mismo n que Spark)": pick("sklearn", "mlp", "hash", n_sh)})
 cands = {k: v for k, v in cands.items() if v is not None}
 P = {k: load_preds(RES, v["pred_file"]) for k, v in cands.items()}
 THR = {k: float(v["threshold"]) for k, v in cands.items()}
@@ -96,7 +110,8 @@ show(boots, 60)
 # ## 6.4 Curvas ROC, PR, calibración, lift y ganancia
 
 # %%
-names = list(P)
+FOCO = ["sk MLP hash", "sk HGB target", "sk SGD hash", "sk MLP freq", "spark MLP freq", "spark GBT freq", "spark MLP hash"]
+names = [k for k in FOCO if k in P] or list(P)[:8]   # curvas: hasta 7 modelos para que se lean
 col = {k: SERIES[i % len(SERIES)] for i, k in enumerate(names)}
 fig, axs = plt.subplots(1, 2, figsize=(13, 5))
 for k in names:
@@ -145,7 +160,8 @@ savefig(fig, FIG, "06_matrices_confusion")
 # %%
 pairs = [("sk MLP freq", "spark MLP freq"), ("sk MLP freq", "sk HGB freq"), ("sk MLP freq", "sk SGD freq"),
          ("spark MLP freq", "spark GBT freq"), ("spark MLP freq", "spark LR freq")]
-pairs += [(names[-1], "sk MLP freq")]
+pairs += [("sk MLP hash", "sk HGB target"), ("sk MLP hash", "sk SGD hash"), ("sk MLP hash", "sk MLP freq"),
+          ("spark MLP hash", "spark LR hash"), ("sk MLP hash (mismo n que Spark)", "spark MLP hash")]
 rows = []
 for a, b in pairs:
     if a not in P or b not in P:
