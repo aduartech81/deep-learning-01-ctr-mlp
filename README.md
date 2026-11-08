@@ -57,6 +57,11 @@ Detalle, intervalos de confianza y discusión en el capítulo 9 del libro.
 
 **Jupyter Book publicado:** https://aduartech81.github.io/deep-learning-01-ctr-mlp/
 
+**Dashboard interactivo:** `dashboard/` (Dash + Plotly, desplegable en Render con `render.yaml`). Resume
+el proyecto en seis secciones —Contexto, Datos, Modelos, Escalabilidad, Interpretabilidad y
+Conclusiones— leyendo solo los resultados ya calculados en `results/`. En local:
+`pip install -r dashboard/requirements.txt && python dashboard/app.py` → http://127.0.0.1:8050
+
 ## Estructura
 
 ```

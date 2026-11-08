@@ -1,0 +1,7 @@
+# Dependencias del dashboard (solo lee resultados; no entrena modelos)
+dash==4.5.0
+dash-bootstrap-components==2.0.4
+plotly==7.1.0
+pandas==2.3.3
+numpy==2.5.3
+gunicorn==26.2.0

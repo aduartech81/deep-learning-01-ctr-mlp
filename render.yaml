@@ -1,0 +1,14 @@
+# Blueprint de Render: dashboard del proyecto (Dash + gunicorn).
+# En Render: New + -> Blueprint -> elegir este repositorio.
+services:
+  - type: web
+    name: deep-learning-01-ctr-mlp
+    runtime: python
+    plan: free
+    buildCommand: pip install -r dashboard/requirements.txt
+    startCommand: gunicorn --chdir dashboard app:server --workers 2 --timeout 120 --bind 0.0.0.0:$PORT
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5

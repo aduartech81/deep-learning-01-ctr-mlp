@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 400" role="img" aria-label="Teléfono con un anuncio conectado a una red neuronal que produce una probabilidad de clic">
+  <rect width="520" height="400" rx="18" fill="#eef4fc"/>
+  <!-- conexiones -->
+  <g stroke="#9ec5f4" stroke-width="1.6" fill="none" opacity=".9">
+    <path d="M190 130 L280 110 M190 130 L280 170 M190 130 L280 230 M190 130 L280 290"/>
+    <path d="M190 200 L280 110 M190 200 L280 170 M190 200 L280 230 M190 200 L280 290"/>
+    <path d="M190 270 L280 110 M190 270 L280 170 M190 270 L280 230 M190 270 L280 290"/>
+    <path d="M280 110 L370 160 M280 170 L370 160 M280 230 L370 160 M280 290 L370 160"/>
+    <path d="M280 110 L370 240 M280 170 L370 240 M280 230 L370 240 M280 290 L370 240"/>
+    <path d="M370 160 L440 200 M370 240 L440 200"/>
+  </g>
+  <!-- teléfono -->
+  <rect x="44" y="70" width="128" height="250" rx="22" fill="#ffffff" stroke="#0d366b" stroke-width="3"/>
+  <rect x="88" y="82" width="40" height="6" rx="3" fill="#c3c2b7"/>
+  <rect x="58" y="102" width="100" height="14" rx="4" fill="#e8e7e1"/>
+  <rect x="58" y="124" width="72" height="10" rx="4" fill="#e8e7e1"/>
+  <rect x="58" y="150" width="100" height="92" rx="10" fill="#2a78d6"/>
+  <circle cx="84" cy="180" r="12" fill="#cde2fb"/>
+  <rect x="102" y="172" width="44" height="7" rx="3" fill="#cde2fb"/>
+  <rect x="102" y="184" width="30" height="7" rx="3" fill="#86b6ef"/>
+  <rect x="72" y="212" width="72" height="20" rx="10" fill="#eb6834"/>
+  <text x="108" y="226" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff">ANUNCIO</text>
+  <rect x="58" y="256" width="100" height="10" rx="4" fill="#e8e7e1"/>
+  <rect x="58" y="274" width="80" height="10" rx="4" fill="#e8e7e1"/>
+  <!-- dedo / toque -->
+  <circle cx="138" cy="226" r="16" fill="none" stroke="#eb6834" stroke-width="2.5" opacity=".55"/>
+  <circle cx="138" cy="226" r="26" fill="none" stroke="#eb6834" stroke-width="2" opacity=".3"/>
+  <!-- neuronas -->
+  <g stroke="#ffffff" stroke-width="3">
+    <circle cx="190" cy="130" r="11" fill="#1baf7a"/><circle cx="190" cy="200" r="11" fill="#1baf7a"/><circle cx="190" cy="270" r="11" fill="#1baf7a"/>
+    <circle cx="280" cy="110" r="11" fill="#2a78d6"/><circle cx="280" cy="170" r="11" fill="#2a78d6"/><circle cx="280" cy="230" r="11" fill="#2a78d6"/><circle cx="280" cy="290" r="11" fill="#2a78d6"/>
+    <circle cx="370" cy="160" r="11" fill="#1c5cab"/><circle cx="370" cy="240" r="11" fill="#1c5cab"/>
+    <circle cx="440" cy="200" r="15" fill="#eb6834"/>
+  </g>
+  <!-- salida -->
+  <rect x="392" y="236" width="104" height="54" rx="10" fill="#ffffff" stroke="#dcdbd4"/>
+  <text x="444" y="257" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="11" fill="#52514e">P(clic)</text>
+  <text x="444" y="280" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#0b0b0b">0,23</text>
+  <text x="235" y="352" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12.5" fill="#52514e">24 variables categóricas → MLP → probabilidad de clic</text>
+</svg>
