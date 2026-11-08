@@ -5,6 +5,9 @@ Maestría en Ingeniería Biomédica · Universidad del Norte
 Asignatura Deep Learning · Profesor: Dr. Lihki Rubio
 Estudiante: Andrés Duarte Chaves
 
+> **Dashboard interactivo con los resultados:** https://deep-learning-01-ctr-mlp.onrender.com/
+> (servicio gratuito de Render: la primera visita puede tardar unos 30–50 s en despertar).
+
 ## Objetivo
 
 Construir, evaluar y comparar clasificadores MLP que predicen si un usuario hace clic en un anuncio

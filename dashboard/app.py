@@ -476,7 +476,7 @@ app.layout = html.Div([
     dcc.Location(id="url"),
     html.Header(html.Div([
         html.A([html.Span(className="brand-dot"), "Clics · MLP"], href="/", className="brand"),
-        html.Nav(id="nav", className="nav"),
+        html.Nav(id="nav", className="topnav"),
         html.A("Jupyter Book ↗", href=BOOK, target="_blank", className="nav-book"),
     ], className="topbar-inner"), className="topbar"),
     html.Main(id="page", className="page"),
@@ -491,7 +491,7 @@ app.layout = html.Div([
 @app.callback(Output("page", "children"), Output("nav", "children"), Input("url", "pathname"))
 def render(path):
     path = path if path in PAGES else "/"
-    nav = [html.A(name, href=p, className="nav-link" + (" active" if p == path else "")) for p, (name, _) in PAGES.items()]
+    nav = [html.A(name, href=p, className="topnav-link" + (" active" if p == path else "")) for p, (name, _) in PAGES.items()]
     return PAGES[path][1](), nav
 
 
